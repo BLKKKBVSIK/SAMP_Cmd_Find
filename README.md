@@ -1,7 +1,15 @@
+# GTA_SA PAWNO FIND COMMAND
+
+## Very easy written code to provide the /find [PlayerID] command to the GTA_SA GameMode. It ll highlight the mainzone of where the player is.
+
+Demo: https://www.youtube.com/watch?v=U5BnQk6BrtY
+
+
+
 /*
     ENUM_ZONES
 */
- 
+ ```
 static const SanAndreasZones[][MainZone] = {
  
     {"The Big Ear",                 {-410.00,1403.30,-3.00,-137.90,1681.20,200.00}},
@@ -361,31 +369,31 @@ static const SanAndreasZones[][MainZone] = {
     {"Willowfield",                 {2541.70,-2059.20,-89.00,2703.50,-1941.40,110.90}},
     {"Yellow Bell Station",         {1377.40,2600.40,-21.90,1492.40,2687.30,78.00}}
 };
- 
+ ```
 /*
     DELETE GANG ZONE AFTER FIND
 */
- 
+ ```
 forward deletePlayerGangZone(playerid, gangzone);
 public deletePlayerGangZone(playerid, gangzone)
 {
     GangZoneStopFlashForPlayer(playerid, gangzone);
     GangZoneDestroy(gangzone);
-    SCM(playerid, COLOR_GREY, "Tu as perdu la trace de ta cible.");
+    SCM(playerid, COLOR_GREY, "You lost your target.");
     return 1;
 }
- 
+```
 /*
     FIND_CMD_FUNC
 */
- 
+ ```
 forward find(playerid, PID);
 public find(playerid, PID)
 {
     new zone[32] = "N/A", str[128], Float:x, Float:y, Float:z, i, gangzone;
  
     if (!GetPlayerPos(PID, x, y, z)){
-        SCM(playerid, COLOR_LIGHTRED, "Ta cible n'est pas connecté.");
+        SCM(playerid, COLOR_LIGHTRED, "The ID you typed is not online.");
     }
     for(i = 0; i < sizeof(SanAndreasZones); i++)
         {
@@ -401,7 +409,7 @@ public find(playerid, PID)
     x = SanAndreasZones[i][Zone_Area][0];
     y = SanAndreasZones[i][Zone_Area][1];
    
-    format(str, sizeof(str), "Voilà la zone de ta cible: %s ((Zone clignotante sur la map))", zone);
+    format(str, sizeof(str), "Your target is in the blinking zone on your map: %s", zone);
     SendClientMessage(playerid, COLOR_GREY, str);
     gangzone = GangZoneCreate(x, y, SanAndreasZones[i][Zone_Area][3], SanAndreasZones[i][Zone_Area][4]);
     GangZoneShowForPlayer(playerid, gangzone, COLOR_RED);
@@ -409,12 +417,12 @@ public find(playerid, PID)
     SetTimerEx("deletePlayerGangZone", 30000, false, "ii", playerid, gangzone);
     return 1;
 }
- 
+ ```
  
 /*
     /FIND_COMMAND
 */
- 
+ ```
 COMMAND:find(playerid, params[])
 {
     new PID, Float:x, Float:y, Float:z, cmd[128], idx;
@@ -430,13 +438,14 @@ COMMAND:find(playerid, params[])
     }
    
     if (!GetPlayerPos(PID, x, y, z)){
-        SCM(playerid, COLOR_LIGHTRED, "Ta cible n'est pas connecté.");
+        SCM(playerid, COLOR_LIGHTRED, "The ID you typed is not online.");
     }
     else {
         if(playerid == PID)
-            return SCM(playerid, COLOR_LIGHTRED, "Tu ne peux pas te tracer toi-même.");
-        SCM(playerid, COLOR_GREY, "Triangulation de ta cible... ((~5 secondes))");
+            return SCM(playerid, COLOR_LIGHTRED, "You can't find yourself dummy.");
+        SCM(playerid, COLOR_GREY, "We gonna find your target... ((~5 seconds))");
         SetTimerEx("find", 5000, false, "ii", playerid, PID);
     }
     return 1;
 }
+```
